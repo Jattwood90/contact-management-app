@@ -45,11 +45,11 @@ spec:
             configMapKeyRef:
               name: contact-app-config
               key: DB_USERNAME
-        - name: POSTGRES_DB
+        - name: POSTGRES_PASSWORD
           valueFrom:
             secretKeyRef:
               name: contact-app-secret
-              key: POSTGRES_DB
+              key: POSTGRES_PASSWORD
         - name: SMARTY_AUTH_ID
           valueFrom:
             secretKeyRef:

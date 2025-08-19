@@ -39,7 +39,7 @@ logger = logging.getLogger(__name__)
 app = Flask(__name__)
 
 app.config.update(
-    DB_HOST=os.getenv('DB_HOST', 'postgres_db'),
+    DB_HOST=os.getenv('DB_HOST', 'postgres-service'),
     DB_PORT=os.getenv('DB_PORT', '5432'),
     DB_NAME=os.getenv('POSTGRES_DB', 'postgres'),
     DB_USERNAME=os.getenv('DB_USERNAME', 'postgres'),
