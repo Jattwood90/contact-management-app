@@ -1,0 +1,526 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contact Directory - Retro Style</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&family=VT323:wght@400&display=swap');
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'VT323', monospace;
+            background: #1a1a2e;
+            background-image: 
+                repeating-linear-gradient(
+                    0deg,
+                    transparent,
+                    transparent 2px,
+                    rgba(255, 255, 255, 0.03) 2px,
+                    rgba(255, 255, 255, 0.03) 4px
+                ),
+                radial-gradient(circle at 25% 25%, #16213e 0%, transparent 50%),
+                radial-gradient(circle at 75% 75%, #0f3460 0%, transparent 50%);
+            min-height: 100vh;
+            color: #00ff41;
+            line-height: 1.6;
+            font-size: 18px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        .header {
+            background: rgba(0, 0, 0, 0.8);
+            border: 3px solid #00ff41;
+            border-radius: 0;
+            padding: 3rem 2rem;
+            margin-bottom: 2rem;
+            box-shadow: 
+                0 0 20px rgba(0, 255, 65, 0.3),
+                inset 0 0 20px rgba(0, 255, 65, 0.1);
+            text-align: center;
+            position: relative;
+            background-image: 
+                linear-gradient(45deg, transparent 40%, rgba(0, 255, 65, 0.05) 50%, transparent 60%);
+        }
+
+        .header::before {
+            content: '';
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            right: 10px;
+            bottom: 10px;
+            border: 1px solid rgba(0, 255, 65, 0.3);
+            pointer-events: none;
+        }
+
+        h1 {
+            font-family: 'Press Start 2P', cursive;
+            font-size: 2.5rem;
+            color: #00ff41;
+            margin-bottom: 1rem;
+            text-shadow: 
+                2px 2px 0px #000000,
+                0 0 10px rgba(0, 255, 65, 0.5);
+            animation: retro-glow 2s ease-in-out infinite alternate;
+            letter-spacing: 2px;
+        }
+
+        @keyframes retro-glow {
+            0% {
+                text-shadow: 
+                    2px 2px 0px #000000,
+                    0 0 10px rgba(0, 255, 65, 0.5);
+            }
+            100% {
+                text-shadow: 
+                    2px 2px 0px #000000,
+                    0 0 20px rgba(0, 255, 65, 0.8),
+                    0 0 30px rgba(0, 255, 65, 0.4);
+            }
+        }
+
+        .subtitle {
+            font-size: 1.4rem;
+            color: #ffff00;
+            margin-bottom: 1rem;
+            text-shadow: 1px 1px 0px #000000;
+            animation: blink 1.5s infinite;
+        }
+
+        @keyframes blink {
+            0%, 50% { opacity: 1; }
+            51%, 100% { opacity: 0.7; }
+        }
+
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 1.5rem;
+            margin-top: 2rem;
+        }
+
+        .stat-card {
+            background: rgba(0, 0, 0, 0.9);
+            border: 2px solid #ff6b35;
+            padding: 1.5rem;
+            text-align: center;
+            transition: all 0.3s ease;
+            position: relative;
+            clip-path: polygon(10px 0%, 100% 0%, 100% calc(100% - 10px), calc(100% - 10px) 100%, 0% 100%, 0% 10px);
+        }
+
+        .stat-card::before {
+            content: '';
+            position: absolute;
+            top: 2px;
+            left: 2px;
+            right: 2px;
+            bottom: 2px;
+            background: linear-gradient(45deg, rgba(255, 107, 53, 0.1), rgba(0, 255, 65, 0.1));
+            clip-path: polygon(8px 0%, 100% 0%, 100% calc(100% - 8px), calc(100% - 8px) 100%, 0% 100%, 0% 8px);
+            z-index: -1;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-3px);
+            border-color: #00ff41;
+            box-shadow: 
+                0 10px 20px rgba(0, 255, 65, 0.3),
+                0 0 20px rgba(0, 255, 65, 0.2);
+        }
+
+        .stat-number {
+            font-family: 'Press Start 2P', cursive;
+            font-size: 2.2rem;
+            color: #ff6b35;
+            text-shadow: 1px 1px 0px #000000;
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-label {
+            font-size: 1rem;
+            color: #00ff41;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            text-shadow: 1px 1px 0px #000000;
+        }
+
+        .contacts-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 2rem;
+        }
+
+        .contact-card {
+            background: rgba(0, 0, 0, 0.9);
+            border: 2px solid #00ff41;
+            padding: 2rem;
+            box-shadow: 
+                5px 5px 0px rgba(0, 255, 65, 0.3),
+                0 0 15px rgba(0, 0, 0, 0.5);
+            transition: all 0.3s ease;
+            position: relative;
+            clip-path: polygon(15px 0%, 100% 0%, 100% calc(100% - 15px), calc(100% - 15px) 100%, 0% 100%, 0% 15px);
+        }
+
+        .contact-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, #ff6b35, #ffff00, #00ff41);
+        }
+
+        .contact-card::after {
+            content: '';
+            position: absolute;
+            top: 4px;
+            left: 4px;
+            right: 4px;
+            bottom: 4px;
+            border: 1px solid rgba(0, 255, 65, 0.3);
+            clip-path: polygon(11px 0%, 100% 0%, 100% calc(100% - 11px), calc(100% - 11px) 100%, 0% 100%, 0% 11px);
+            pointer-events: none;
+        }
+
+        .contact-card:hover {
+            transform: translateY(-5px) translateX(5px);
+            box-shadow: 
+                10px 10px 0px rgba(0, 255, 65, 0.4),
+                0 0 25px rgba(0, 255, 65, 0.3);
+            border-color: #ffff00;
+        }
+
+        .contact-name {
+            font-family: 'Press Start 2P', cursive;
+            font-size: 1.2rem;
+            color: #ffff00;
+            margin-bottom: 1rem;
+            text-shadow: 1px 1px 0px #000000;
+            line-height: 1.4;
+        }
+
+        .contact-address {
+            color: #00ff41;
+            margin-bottom: 1.5rem;
+            line-height: 1.8;
+            font-size: 1.1rem;
+            text-shadow: 1px 1px 0px rgba(0, 0, 0, 0.8);
+        }
+
+        .address-line {
+            display: block;
+            margin-bottom: 0.3rem;
+        }
+
+        .validation-badge {
+            display: inline-block;
+            padding: 0.8rem 1.5rem;
+            font-family: 'Press Start 2P', cursive;
+            font-size: 0.6rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            border: 2px solid;
+            transition: all 0.3s ease;
+            position: relative;
+            clip-path: polygon(8px 0%, 100% 0%, 100% calc(100% - 8px), calc(100% - 8px) 100%, 0% 100%, 0% 8px);
+            text-shadow: 1px 1px 0px #000000;
+        }
+
+        .validation-badge:hover {
+            transform: scale(1.1);
+        }
+
+        .valid-badge {
+            background: rgba(0, 255, 65, 0.2);
+            color: #00ff41;
+            border-color: #00ff41;
+            box-shadow: 
+                0 0 10px rgba(0, 255, 65, 0.3),
+                inset 0 0 10px rgba(0, 255, 65, 0.1);
+        }
+
+        .invalid-badge {
+            background: rgba(255, 107, 53, 0.2);
+            color: #ff6b35;
+            border-color: #ff6b35;
+            box-shadow: 
+                0 0 10px rgba(255, 107, 53, 0.3),
+                inset 0 0 10px rgba(255, 107, 53, 0.1);
+        }
+
+        .not-validated-badge {
+            background: rgba(255, 255, 0, 0.2);
+            color: #ffff00;
+            border-color: #ffff00;
+            box-shadow: 
+                0 0 10px rgba(255, 255, 0, 0.3),
+                inset 0 0 10px rgba(255, 255, 0, 0.1);
+        }
+
+        .footer {
+            background: rgba(0, 0, 0, 0.9);
+            border: 2px solid #ff6b35;
+            padding: 2rem;
+            margin-top: 3rem;
+            text-align: center;
+            box-shadow: 0 0 20px rgba(255, 107, 53, 0.3);
+            clip-path: polygon(20px 0%, 100% 0%, 100% calc(100% - 20px), calc(100% - 20px) 100%, 0% 100%, 0% 20px);
+        }
+
+        .timestamp {
+            font-family: 'Press Start 2P', cursive;
+            color: #ff6b35;
+            font-size: 0.8rem;
+            text-shadow: 1px 1px 0px #000000;
+            letter-spacing: 1px;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 1rem;
+            }
+
+            h1 {
+                font-size: 1.8rem;
+            }
+
+            .contacts-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .stats {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .contact-card {
+                padding: 1.5rem;
+            }
+
+            .stat-number {
+                font-size: 1.8rem;
+            }
+        }
+
+        /* Retro scanline effect */
+        .scanlines {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: 
+                repeating-linear-gradient(
+                    0deg,
+                    transparent,
+                    transparent 2px,
+                    rgba(0, 255, 65, 0.03) 2px,
+                    rgba(0, 255, 65, 0.03) 4px
+                );
+            pointer-events: none;
+            z-index: 1000;
+            animation: scanline-move 0.1s linear infinite;
+        }
+
+        @keyframes scanline-move {
+            0% { transform: translateY(0px); }
+            100% { transform: translateY(4px); }
+        }
+
+        /* Terminal cursor effect */
+        .cursor::after {
+            content: '█';
+            animation: cursor-blink 1s infinite;
+            color: #00ff41;
+        }
+
+        @keyframes cursor-blink {
+            0%, 50% { opacity: 1; }
+            51%, 100% { opacity: 0; }
+        }
+
+        /* CRT screen effect */
+        .container {
+            filter: contrast(1.1) brightness(1.1);
+        }
+
+        /* Scrollbar styling */
+        ::-webkit-scrollbar {
+            width: 12px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #000000;
+            border: 1px solid #00ff41;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #00ff41;
+            border: 1px solid #000000;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: #ffff00;
+        }
+    </style>
+</head>
+<body>
+    <div class="scanlines"></div>
+    
+    <div class="container">
+        <div class="header">
+            <h1>CONTACT_DIRECTORY.EXE</h1>
+            <p class="subtitle">RETRO CONTACT MANAGEMENT SYSTEM v2.1<span class="cursor"></span></p>
+            
+            <div class="stats">
+                <div class="stat-card">
+                    <div class="stat-number">{{ contacts|length }}</div>
+                    <div class="stat-label">TOTAL_RECORDS</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">{{ contacts|selectattr('valid', 'equalto', 'valid')|list|length }}</div>
+                    <div class="stat-label">VALID_ADDR</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">{{ contacts|selectattr('valid', 'equalto', 'invalid')|list|length }}</div>
+                    <div class="stat-label">INVALID_ADDR</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">{{ contacts|selectattr('valid', 'equalto', 'not-validated')|list|length }}</div>
+                    <div class="stat-label">PENDING_VAL</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="contacts-grid">
+            {% for contact in contacts %}
+            <div class="contact-card">
+                <div class="contact-name">
+                    {{ contact.first_name|upper }} {{ contact.last_name|upper }}
+                </div>
+                
+                <div class="contact-address">
+                    <span class="address-line">{{ contact.address|upper }}</span>
+                    <span class="address-line">{{ contact.city|upper }}, {{ contact.state|upper }} {{ contact.zipcode }}</span>
+                    {% if contact.country and contact.country != 'USA' %}
+                    <span class="address-line">{{ contact.country|upper }}</span>
+                    {% endif %}
+                </div>
+                
+                <div class="validation-status">
+                    <span class="validation-badge {{ contact.badge_class }}">
+                        {% if contact.valid == 'valid' %}
+                        ADDR_OK
+                        {% elif contact.valid == 'invalid' %}
+                        ADDR_ERR
+                        {% else %}
+                        PENDING
+                        {% endif %}
+                    </span>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+
+        <div class="footer">
+            <p class="timestamp">
+                GENERATED: {{ timestamp|upper }}
+            </p>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            document.documentElement.style.scrollBehavior = 'smooth';
+            
+            // Add retro loading effect
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.style.opacity = '1';
+                        entry.target.style.transform = 'translateY(0)';
+                    }
+                });
+            }, { threshold: 0.1 });
+
+            document.querySelectorAll('.contact-card').forEach((card, index) => {
+                card.style.opacity = '0';
+                card.style.transform = 'translateY(20px)';
+                card.style.transition = `opacity 0.5s ease ${index * 0.1}s, transform 0.5s ease ${index * 0.1}s`;
+                observer.observe(card);
+            });
+
+            // Add terminal typing effect
+            const subtitle = document.querySelector('.subtitle');
+            const originalText = subtitle.textContent;
+            subtitle.textContent = '';
+            
+            let i = 0;
+            const typeWriter = () => {
+                if (i < originalText.length) {
+                    subtitle.textContent += originalText.charAt(i);
+                    i++;
+                    setTimeout(typeWriter, 50);
+                }
+            };
+            
+            setTimeout(typeWriter, 1000);
+
+            // Add retro click sounds (visual feedback)
+            document.querySelectorAll('.contact-card, .stat-card').forEach(card => {
+                card.addEventListener('click', function() {
+                    this.style.transform = 'scale(0.98)';
+                    setTimeout(() => {
+                        this.style.transform = '';
+                    }, 100);
+                });
+            });
+
+            // Add glitch effect occasionally
+            setInterval(() => {
+                if (Math.random() < 0.1) {
+                    document.body.style.filter = 'hue-rotate(180deg) saturate(2)';
+                    setTimeout(() => {
+                        document.body.style.filter = '';
+                    }, 100);
+                }
+            }, 3000);
+
+            // Add random static effect
+            const createStatic = () => {
+                const static = document.createElement('div');
+                static.style.cssText = `
+                    position: fixed;
+                    top: ${Math.random() * 100}%;
+                    left: ${Math.random() * 100}%;
+                    width: 2px;
+                    height: 2px;
+                    background: #00ff41;
+                    pointer-events: none;
+                    z-index: 999;
+                `;
+                document.body.appendChild(static);
+                
+                setTimeout(() => {
+                    document.body.removeChild(static);
+                }, 100);
+            };
+
+            setInterval(createStatic, 2000);
+        });
+    </script>
+</body>
+</html>

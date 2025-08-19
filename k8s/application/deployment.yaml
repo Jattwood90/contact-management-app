@@ -1,0 +1,116 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: contact-app
+  namespace: contact-system
+  labels:
+    app: contact-app
+    tier: frontend
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: contact-app
+  template:
+    metadata:
+      labels:
+        app: contact-app
+        tier: frontend
+    spec:
+      containers:
+      - name: contact-app
+        image: contact-app:latest
+        imagePullPolicy: Never  # Use local image
+        ports:
+        - containerPort: 3000
+          name: http
+        env:
+        - name: DB_HOST
+          valueFrom:
+            configMapKeyRef:
+              name: contact-app-config
+              key: DB_HOST
+        - name: DB_PORT
+          valueFrom:
+            configMapKeyRef:
+              name: contact-app-config
+              key: DB_PORT
+        - name: POSTGRES_DB
+          valueFrom:
+            configMapKeyRef:
+              name: contact-app-config
+              key: POSTGRES_DB
+        - name: DB_USERNAME
+          valueFrom:
+            configMapKeyRef:
+              name: contact-app-config
+              key: DB_USERNAME
+        - name: POSTGRES_DB
+          valueFrom:
+            secretKeyRef:
+              name: contact-app-secret
+              key: POSTGRES_DB
+        - name: SMARTY_AUTH_ID
+          valueFrom:
+            secretKeyRef:
+              name: contact-app-secret
+              key: SMARTY_AUTH_ID
+        - name: SMARTY_AUTH_TOKEN
+          valueFrom:
+            secretKeyRef:
+              name: contact-app-secret
+              key: SMARTY_AUTH_TOKEN
+        - name: TEMPLATE_STYLE
+          valueFrom:
+            configMapKeyRef:
+              name: contact-app-config
+              key: TEMPLATE_STYLE
+        - name: FLASK_HOST
+          valueFrom:
+            configMapKeyRef:
+              name: contact-app-config
+              key: FLASK_HOST
+        - name: FLASK_PORT
+          valueFrom:
+            configMapKeyRef:
+              name: contact-app-config
+              key: FLASK_PORT
+        - name: FLASK_DEBUG
+          valueFrom:
+            configMapKeyRef:
+              name: contact-app-config
+              key: FLASK_DEBUG
+        - name: TEMPLATES_DIR
+          valueFrom:
+            configMapKeyRef:
+              name: contact-app-config
+              key: TEMPLATES_DIR
+        - name: OUTPUT_DIR
+          valueFrom:
+            configMapKeyRef:
+              name: contact-app-config
+              key: OUTPUT_DIR
+        resources:
+          requests:
+            memory: "128Mi"
+            cpu: "100m"
+          limits:
+            memory: "256Mi"
+            cpu: "200m"
+        livenessProbe:
+          httpGet:
+            path: /api/health
+            port: 3000
+          initialDelaySeconds: 30
+          periodSeconds: 10
+          timeoutSeconds: 5
+          failureThreshold: 3
+        readinessProbe:
+          httpGet:
+            path: /api/health
+            port: 3000
+          initialDelaySeconds: 10
+          periodSeconds: 5
+          timeoutSeconds: 3
+          failureThreshold: 3
+      restartPolicy: Always

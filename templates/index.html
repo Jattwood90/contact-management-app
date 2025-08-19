@@ -1,0 +1,433 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contact Management System</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: #333;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        .header {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 15px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+
+        h1 {
+            color: #2d3748;
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+
+        .subtitle {
+            color: #718096;
+            font-size: 1.2rem;
+        }
+
+        .controls {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 15px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        }
+
+        .control-group {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .btn-secondary {
+            background: linear-gradient(135deg, #48bb78 0%, #38a169 100%);
+        }
+
+        .btn-warning {
+            background: linear-gradient(135deg, #ed8936 0%, #dd6b20 100%);
+        }
+
+        .select-group {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        select {
+            padding: 8px 12px;
+            border: 2px solid #e2e8f0;
+            border-radius: 6px;
+            background: white;
+            font-size: 1rem;
+        }
+
+        .status {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 15px;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        }
+
+        .status-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.5rem 0;
+            border-bottom: 1px solid #e2e8f0;
+        }
+
+        .status-item:last-child {
+            border-bottom: none;
+        }
+
+        .badge {
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.875rem;
+            font-weight: 600;
+        }
+
+        .badge-success {
+            background: #c6f6d5;
+            color: #22543d;
+        }
+
+        .badge-error {
+            background: #fed7d7;
+            color: #742a2a;
+        }
+
+        .badge-warning {
+            background: #feebc8;
+            color: #7b341e;
+        }
+
+        .loading {
+            display: none;
+            text-align: center;
+            padding: 2rem;
+        }
+
+        .spinner {
+            width: 40px;
+            height: 40px;
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #667eea;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 1rem;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .api-docs {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 15px;
+            padding: 2rem;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        }
+
+        .endpoint {
+            background: #f7fafc;
+            border-left: 4px solid #667eea;
+            padding: 1rem;
+            margin: 1rem 0;
+            border-radius: 0 8px 8px 0;
+        }
+
+        .method {
+            display: inline-block;
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            margin-right: 0.5rem;
+        }
+
+        .method-get { background: #38a169; color: white; }
+        .method-post { background: #ed8936; color: white; }
+
+        code {
+            background: #edf2f7;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Contact Management System</h1>
+            <p class="subtitle">Validate addresses and generate HTML reports</p>
+        </div>
+
+        <div class="controls">
+            <h3>Actions</h3>
+            <div class="control-group">
+                <button class="btn" onclick="loadContacts()">Load Contacts</button>
+                <button class="btn btn-secondary" onclick="validateAllAddresses()">Validate All Addresses</button>
+                <button class="btn btn-warning" onclick="generateHTML()">Generate HTML Report</button>
+            </div>
+            
+            <div class="select-group">
+                <label for="templateStyle">Template Style:</label>
+                <select id="templateStyle">
+                    <option value="random">Random</option>
+                    <option value="modern">Modern</option>
+                    <option value="dark">Dark</option>
+                    <option value="neon">Neon</option>
+                    <option value="retro">Retro</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="loading" id="loading">
+            <div class="spinner"></div>
+            <p>Processing...</p>
+        </div>
+
+        <div class="status" id="status" style="display: none;">
+            <h3>System Status</h3>
+            <div id="statusContent"></div>
+        </div>
+
+        <div class="api-docs">
+            <h3>API Endpoints</h3>
+            
+            <div class="endpoint">
+                <span class="method method-get">GET</span>
+                <code>/api/contacts</code>
+                <p>Get all contacts with validation status</p>
+            </div>
+
+            <div class="endpoint">
+                <span class="method method-get">GET</span>
+                <code>/api/contacts/{id}</code>
+                <p>Get specific contact by ID</p>
+            </div>
+
+            <div class="endpoint">
+                <span class="method method-post">POST</span>
+                <code>/api/validate</code>
+                <p>Validate all contact addresses using SmartyStreets API</p>
+            </div>
+
+            <div class="endpoint">
+                <span class="method method-post">POST</span>
+                <code>/api/validate/{id}</code>
+                <p>Validate specific contact address</p>
+            </div>
+
+            <div class="endpoint">
+                <span class="method method-post">POST</span>
+                <code>/api/generate</code>
+                <p>Generate HTML report with specified template style</p>
+            </div>
+
+            <div class="endpoint">
+                <span class="method method-get">GET</span>
+                <code>/api/templates</code>
+                <p>Get available template styles</p>
+            </div>
+
+            <div class="endpoint">
+                <span class="method method-get">GET</span>
+                <code>/api/health</code>
+                <p>Check system health and database connectivity</p>
+            </div>
+
+            <div class="endpoint">
+                <span class="method method-get">GET</span>
+                <code>/download/{filename}</code>
+                <p>Download generated HTML files</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function showLoading() {
+            document.getElementById('loading').style.display = 'block';
+            document.getElementById('status').style.display = 'none';
+        }
+
+        function hideLoading() {
+            document.getElementById('loading').style.display = 'none';
+        }
+
+        function showStatus(title, items) {
+            const statusContent = document.getElementById('statusContent');
+            let html = `<h4>${title}</h4>`;
+            
+            items.forEach(item => {
+                const badgeClass = item.type === 'success' ? 'badge-success' : 
+                                 item.type === 'error' ? 'badge-error' : 'badge-warning';
+                html += `
+                    <div class="status-item">
+                        <span>${item.label}</span>
+                        <span class="badge ${badgeClass}">${item.value}</span>
+                    </div>
+                `;
+            });
+            
+            statusContent.innerHTML = html;
+            document.getElementById('status').style.display = 'block';
+            hideLoading();
+        }
+
+        async function loadContacts() {
+            showLoading();
+            try {
+                const response = await fetch('/api/contacts');
+                const data = await response.json();
+                
+                if (response.ok) {
+                    showStatus('Contacts Loaded', [
+                        { label: 'Total Contacts', value: data.count, type: 'success' },
+                        { label: 'Last Updated', value: new Date(data.timestamp).toLocaleString(), type: 'success' }
+                    ]);
+                } else {
+                    showStatus('Error', [
+                        { label: 'Error', value: data.error, type: 'error' }
+                    ]);
+                }
+            } catch (error) {
+                showStatus('Error', [
+                    { label: 'Network Error', value: error.message, type: 'error' }
+                ]);
+            }
+        }
+
+        async function validateAllAddresses() {
+            showLoading();
+            try {
+                const response = await fetch('/api/validate', { method: 'POST' });
+                const data = await response.json();
+                
+                if (response.ok) {
+                    showStatus('Address Validation Complete', [
+                        { label: 'Contacts Processed', value: data.count, type: 'success' },
+                        { label: 'Status', value: data.message, type: 'success' }
+                    ]);
+                } else {
+                    showStatus('Validation Error', [
+                        { label: 'Error', value: data.error, type: 'error' }
+                    ]);
+                }
+            } catch (error) {
+                showStatus('Error', [
+                    { label: 'Network Error', value: error.message, type: 'error' }
+                ]);
+            }
+        }
+
+        async function generateHTML() {
+            showLoading();
+            const templateStyle = document.getElementById('templateStyle').value;
+            
+            try {
+                const response = await fetch('/api/generate', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        template_style: templateStyle,
+                        output_filename: 'contact_report.html'
+                    })
+                });
+                
+                const data = await response.json();
+                
+                if (response.ok) {
+                    showStatus('HTML Report Generated', [
+                        { label: 'Template Style', value: data.template_style, type: 'success' },
+                        { label: 'Contacts Included', value: data.contacts_count, type: 'success' },
+                        { label: 'Download', value: `<a href="${data.download_url}" target="_blank">Download Report</a>`, type: 'success' }
+                    ]);
+                } else {
+                    showStatus('Generation Error', [
+                        { label: 'Error', value: data.error, type: 'error' }
+                    ]);
+                }
+            } catch (error) {
+                showStatus('Error', [
+                    { label: 'Network Error', value: error.message, type: 'error' }
+                ]);
+            }
+        }
+
+        // Load system health on page load
+        window.addEventListener('DOMContentLoaded', async () => {
+            try {
+                const response = await fetch('/api/health');
+                const data = await response.json();
+                
+                const healthItems = [
+                    { label: 'System Status', value: data.status, type: data.status === 'healthy' ? 'success' : 'error' },
+                    { label: 'Database', value: data.database, type: data.database === 'healthy' ? 'success' : 'error' },
+                    { label: 'Version', value: data.version, type: 'success' }
+                ];
+                
+                showStatus('System Health', healthItems);
+            } catch (error) {
+                showStatus('Health Check Failed', [
+                    { label: 'Error', value: error.message, type: 'error' }
+                ]);
+            }
+        });
+    </script>
+</body>
+</html>

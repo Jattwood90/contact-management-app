@@ -1,0 +1,74 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+metadata:
+  name: contact-management-system
+  namespace: contact-system
+
+namespace: contact-system
+
+resources:
+- namespace.yaml
+- database/configmap.yaml
+- database/pvc.yaml
+- database/deployment.yaml
+- database/service.yaml
+- application/configmap.yaml
+- application/deployment.yaml
+- application/service.yaml
+
+commonLabels:
+  app.kubernetes.io/name: contact-management
+  app.kubernetes.io/version: "1.0.0"
+  app.kubernetes.io/managed-by: kustomize
+
+images:
+- name: contact-app
+  newTag: latest
+- name: postgres-contact
+  newTag: latest
+
+patchesStrategicMerge:
+- |-
+  apiVersion: apps/v1
+  kind: Deployment
+  metadata:
+    name: contact-app
+    namespace: contact-system
+  spec:
+    template:
+      metadata:
+        annotations:
+          prometheus.io/scrape: "true"
+          prometheus.io/port: "3000"
+          prometheus.io/path: "/api/health"
+
+#Good for debugging, not ideal for production when pods are ripped up and down
+generatorOptions:
+  disableNameSuffixHash: true
+
+configMapGenerator:
+- name: app-info
+  literals:
+  - version=1.0.0
+  - build-date=2024-01-01
+
+
+secretGenerator:
+# Database secrets
+- name: postgres-secret
+  envs:
+    - .env
+  options:
+    labels:
+      app: postgres-contact
+      component: database
+
+# Application secrets  
+- name: contact-app-secret
+  envs:
+    - .env
+  options:
+    labels:
+      app: contact-app
+      component: application
