@@ -1,0 +1,20 @@
+# Database Configuration
+DB_HOST=postgres_db
+DB_PORT=5432
+POSTGRES_DB=postgres
+DB_USERNAME=postgres
+POSTGRES_PASSWORD=secret-password
+
+# SmartyStreets API Configuration
+SMARTY_AUTH_ID=..
+SMARTY_AUTH_TOKEN=..
+
+# Application Configuration
+TEMPLATE_STYLE=random
+TEMPLATES_DIR=templates
+OUTPUT_DIR=static/generated
+
+# Flask Configuration
+FLASK_DEBUG=false
+FLASK_HOST=0.0.0.0
+FLASK_PORT=3000
