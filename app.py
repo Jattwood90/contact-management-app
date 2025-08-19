@@ -138,14 +138,20 @@ def fetch_contacts():
     finally:
         conn.close()
 
-def update_validation_status(contact_id, validation_status):
-    """Update validation status in database"""
+def update_validation_status(contact_id, validation_result):
+    """Update validation status in database with boolean value"""
     conn = get_db_connection()
     try:
         cursor = conn.cursor()
+        
+        # Convert complex result to boolean
+        is_valid = bool(validation_result and validation_result != "API Error" 
+                       and validation_result != "Validation Failed" 
+                       and validation_result != "Not Validated")
+        
         cursor.execute(
             "UPDATE contacts SET valid = %s WHERE id = %s",
-            (validation_status, contact_id)
+            (is_valid, contact_id)
         )
         conn.commit()
         cursor.close()
